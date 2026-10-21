@@ -6,11 +6,13 @@ HEIGHT = 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 clock = pygame.time.Clock()
-
+SKY = (41, 209, 242)
+GRASS = (20, 247, 12)
+PLAYER_1 = (245, 107, 15)
 player = pygame.Rect(100, 450, 40, 50)
 player_speed = 30
 velocity_y = 0
-gravity = 0.1
+gravity = 0.6
 on_ground = False
 jump_strength = -12
 has_double_jumped = False
@@ -28,11 +30,21 @@ while running:
 
     keys = pygame.key.get_pressed()
 
-if keys(pygame.K_LEFT) or keys(pygame.K_a):
-    player.x += player_speed
-if keys(pygame.K_RIGHT) or keys(pygame.K_d):
-    player.x += player_speed
+    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        player.x += player_speed
+    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+        player.x += player_speed
 
-velocity_y += gravity
-
-pygame.draw.flip()
+    velocity_y += gravity
+    player.y += int(velocity_y)
+    if player.colliderect(floor) and velocity_y >= 0:
+        player.bottom = floor.top
+        velocity_y = 0
+        on_ground = True
+    else:
+        on_ground = False  
+    screen.fill(SKY)
+    pygame.draw.rect(screen, GRASS, floor)  
+    pygame.draw.rect(screen, PLAYER_1, player)
+    pygame.display.flip()
+pygame.quit()
